@@ -23,6 +23,9 @@ public class LaserGun : MonoBehaviour
     float timeElapsed; 
     float valueToLerp;
 
+    public Recoil recoil;
+
+
     private void Awake()
     {
        laserAudioSource = GetComponent<AudioSource>();
@@ -50,6 +53,8 @@ public class LaserGun : MonoBehaviour
             laserAudioSource.PlayOneShot(laserSFX);
 
             textAmmo.text = curAmmo.ToString();
+
+            recoil.RecoilFire();
 
             //raycast
             if (Physics.Raycast(raycastOrigin.position, raycastOrigin.forward, out hit, 800f))
@@ -90,4 +95,6 @@ public class LaserGun : MonoBehaviour
             textAmmo.color = Color.white;
         }
     }
+
+    
 }
