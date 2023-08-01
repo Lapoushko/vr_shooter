@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour
 
     [Header("Score Components")]
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI scoreMultiplierText;
 
     [Header("Game Over Components")]
     [SerializeField] private GameObject gameOverScreen;
@@ -24,6 +25,12 @@ public class GameController : MonoBehaviour
     [Header("Gameplay audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] gameplayAudio;
+
+    [Header("Score Mulltiply")]
+    [SerializeField] private int maxMultiplier;
+    [SerializeField] private int currMultiplier;
+    [SerializeField] private float maxTimeMultiplier;
+    [SerializeField] private float currTimeMultiplier;
 
     private int playerScore;
 
@@ -49,6 +56,7 @@ public class GameController : MonoBehaviour
     {
         if(currentGameStatus == GameState.Playing)
             AdjustTimer();
+        UpdateTimeScore();
     }
 
     private void AdjustTimer()
@@ -56,21 +64,39 @@ public class GameController : MonoBehaviour
         timerImage.fillAmount = sliderCurrentFillAmount - (Time.deltaTime / gameTime);
 
         sliderCurrentFillAmount = timerImage.fillAmount;
-
         if(sliderCurrentFillAmount <= 0f)
         {
             GameOver();
+        }      
+    }
+
+    private void UpdateTimeScore()
+    {
+        if (currTimeMultiplier > 0f)
+        {
+            currTimeMultiplier -= Time.deltaTime;
+        }     
+        else
+        {
+            currTimeMultiplier = 0;
+            currMultiplier = 0;
+            scoreMultiplierText.text = ((int)Math.Pow(2, currMultiplier)).ToString() + "X Combo";
         }
     }
 
-   
-
     public void UpdatePlayerScore(int asteroidHitPoints)
     {
+        Debug.Log(playerScore);
         if (currentGameStatus != GameState.Playing)
             return;
 
-        playerScore += asteroidHitPoints;
+        currTimeMultiplier = maxTimeMultiplier;
+        if (currMultiplier < maxMultiplier)
+        {
+            currMultiplier++;
+        }
+        playerScore += asteroidHitPoints * (int)Math.Pow(2,currMultiplier);
+        scoreMultiplierText.text = ((int)Math.Pow(2, currMultiplier)).ToString() + "X Combo";
         scoreText.text = playerScore.ToString();
     }
 
