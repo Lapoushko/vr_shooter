@@ -19,6 +19,12 @@ public class AsteroidMovement : MonoBehaviour
 
     private float asteroidSpeed;
 
+    private GameObject lowPolyAsteroid;
+    private Material asteroidMaterial;
+
+    private float colorRed;
+    private float colorGreen;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +39,25 @@ public class AsteroidMovement : MonoBehaviour
         transform.Rotate(xAngle, yAngle, zAngle);
 
         rotationalSpeed = Random.Range(rotationalSpeedMin, rotationalSpeedMax);
+
+        lowPolyAsteroid = transform.GetChild(0).gameObject;
+        asteroidMaterial = lowPolyAsteroid.GetComponent<Renderer>().material;
+        colorGreen = Random.Range(0.00332858f, 0.007689557f);
+        if (asteroidSpeed >= 8)
+        {
+            colorRed = Random.Range(0.09f, 0.14f);
+            asteroidMaterial.SetColor("_EmissionColor", new Color(colorRed, colorGreen, colorGreen));
+        }
+        if (asteroidSpeed >= 5 && asteroidSpeed < 8)
+        {
+            colorRed = Random.Range(0.04f, 0.08f);
+            asteroidMaterial.SetColor("_EmissionColor", new Color(colorRed, colorGreen, colorGreen));
+        }
+        else
+        {
+            colorRed = Random.Range(0.01f, 0.03f);
+            asteroidMaterial.SetColor("_EmissionColor", new Color(colorRed, colorGreen, colorGreen));
+        }
     }
 
     // Update is called once per frame
